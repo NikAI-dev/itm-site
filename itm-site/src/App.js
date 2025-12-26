@@ -2,6 +2,20 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async() => {
+    try {
+      const response = await fetch('http://localhost:5000/run-function');
+      const data = await response.json();
+      console.log(data);
+      setMessage(data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setMessage('Error connecting to backend');
+    }
+  };
+  
   return (
     <div className="App">
       <div className="navbar">
@@ -9,9 +23,9 @@ function App() {
           <h3>MinecraftIMG</h3>
         </div>
         <div className="infobox">
-          <h4>Help</h4>
-          <div>
-            <h4>English</h4>
+          <h4 className="help-text">Help</h4>
+          <div className="language-box">
+            <h3 className="language-text">English</h3>
           </div>
         </div>
       </div>
@@ -25,7 +39,13 @@ function App() {
               <span class="upload-text">Click to Upload Image</span>
             </label>
           </div>
-          <button type="submit" id="submitButton">Upload Image</button>
+          <div class="block-number">
+            <label for="width-selection" class="block-label"><p>Number of horizontal blocks</p></label>
+            <input id="width-selection" type="number" class="block-input"/>
+          </div>
+          <div id="submitButton" onclick="handleSubmit()">
+            Convert
+          </div>
         </form>
       </div>
       <div className="footer">

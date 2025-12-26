@@ -5,6 +5,7 @@
   background-color: #2D2D2D;
   height: 100vh;
   padding: 12px;
+  position: relative;
 }
 
 
@@ -16,6 +17,19 @@
 .infobox{
   display: flex;
   align-items: center;
+}
+.help-text{
+  margin: 5px;
+}
+.language-box{
+  margin: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.language-text{
+  margin: 5px;
 }
 
 
@@ -52,7 +66,6 @@
   background-color: #f9f9f9;
   text-align: center;
   transition: background-color 0.3s;
-  width: 100%;
 }
 .file-label:hover {
   background-color: #e9ecef;
@@ -65,10 +78,23 @@
 .upload-text {
   color: #555;
 }
+.block-number{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.block-label{
+  padding: 5px;
+}
+.block-input{
+  margin: 5px;
+  height: 50%;
+}
 #submitButton{
   background-color: rgb(33, 204, 33);
   cursor: pointer;
   border-radius: 8px;
+  padding: 8px;
 }
 
 .footer{
@@ -80,4 +106,7 @@
   margin: -12px;
   margin-top: 12px;
   height: 10%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
