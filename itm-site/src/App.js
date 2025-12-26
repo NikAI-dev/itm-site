@@ -1,21 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from "react"
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [file, setFile] = useState(null)
+  const [preview, setPreview] = useState(null);
+  const [width, setWidth] = useState(64)
 
-  const handleSubmit = async() => {
+  function handleFileChange(e) {
+    const selected = e.target.files[0];
+    setFile(selected);
+    setPreview(URL.createObjectURL(selected));
+  }
+  function handleWidthChange(e) {
+    setWidth(e.target.value);
+  }
+  function handleSubmit() {
+    upload(file, width);
+  }
+
+  async function upload(file, width) {
+    const form = new FormData();
+    form.append("image", file)
+    form.append("width", width)
     try {
-      const response = await fetch('http://localhost:5000/run-function');
-      const data = await response.json();
-      console.log(data);
-      setMessage(data.data);
+      const res = await fetch('http://localhost:5000/minecraftify', {
+        method:"POST",
+        body:form
+      });
+      console.log(res)
+      if (!res.ok) throw new Error(await res.text());
+        return await res.json(); // or res.blob() if returning an image
     } catch (error) {
       console.error('Error fetching data:', error);
-      setMessage('Error connecting to backend');
     }
   };
-  
+
   return (
     <div className="App">
       <div className="navbar">
@@ -32,8 +51,9 @@ function App() {
       <div className="mainContent">
         <form class="mainForm">
           <div class="upload-container">
-            <input type="file" id="image-upload" name="profile_pic" accept="image/png, image/jpeg" class="fileInput" />
+            <input type="file" id="image-upload" onChange={handleFileChange} name="profile_pic" accept="image/png, image/jpeg" class="fileInput" />
             
+          
             <label for="image-upload" class="file-label">
               <span class="upload-icon">⬆️</span>
               <span class="upload-text">Click to Upload Image</span>
@@ -41,9 +61,9 @@ function App() {
           </div>
           <div class="block-number">
             <label for="width-selection" class="block-label"><p>Number of horizontal blocks</p></label>
-            <input id="width-selection" type="number" class="block-input"/>
+            <input id="width-selection" type="number" class="block-input" value={width} onChange={handleWidthChange}/>
           </div>
-          <div id="submitButton" onclick="handleSubmit()">
+          <div id="submitButton" onClick={handleSubmit}>
             Convert
           </div>
         </form>
