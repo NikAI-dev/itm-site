@@ -18,20 +18,16 @@ def minecraftify_api():
     f = request.files["image"]
     if f.filename == "":
         return jsonify({"error": "Empty filename"}), 400
-    if "width" in request.files:
-        width = request.files["width"]
-        image_bytes = f.read()
-        result_img = converter_bytes(image_bytes= image_bytes, width= width,blocks_list= "/Users/Nikita/Desktop/Random programs/itm site/backend/blocks.json")
+    
+    width = request.form.get("width", type=int, default=128)
+    image_bytes = f.read()
+    result_img = converter_bytes(image_bytes= image_bytes, width= width,blocks_list= "/Users/Nikita/Desktop/Random programs/itm site/backend/blocks.json")
 
-        buf = BytesIO()
-        result_img.save(buf, format="PNG")
-        buf.seek(0)
+    buf = BytesIO()
+    result_img.save(buf, format="PNG")
+    buf.seek(0)
 
-        return send_file(buf, mimetype="image/png")
-    else:
-        print(request.files)
-
-        return {"message": "no width?" }
+    return send_file(buf, mimetype="image/png")
     
 
 if __name__ == '__main__':

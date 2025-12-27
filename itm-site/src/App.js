@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function App() {
   const [file, setFile] = useState(null)
@@ -20,8 +20,10 @@ function App() {
 
   async function upload(file, width) {
     const form = new FormData();
-    form.append("image", file)
-    form.append("width", width)
+    form.append("image", file);
+    console.log(width)
+    form.append("width", width);
+
     try {
       const res = await fetch('http://localhost:5000/minecraftify', {
         method:"POST",
@@ -34,6 +36,11 @@ function App() {
       console.error('Error fetching data:', error);
     }
   };
+
+  useEffect(() => {
+    return () => preview && URL.revokeObjectURL(preview);
+  }, [preview]);
+  
 
   return (
     <div className="App">
