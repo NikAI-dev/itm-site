@@ -89,12 +89,16 @@
 .block-input{
   margin: 5px;
   height: 50%;
+  color: black;
 }
 #submitButton{
   background-color: rgb(33, 204, 33);
   cursor: pointer;
   border-radius: 8px;
   padding: 8px;
+}
+.dwn-link-btn{
+  text-decoration: none;
 }
 
 .footer{

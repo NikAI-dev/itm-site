@@ -5,6 +5,7 @@ function App() {
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null);
   const [width, setWidth] = useState(64)
+  const [resultUrl, setResult] = useState(null);
 
   function handleFileChange(e) {
     const selected = e.target.files[0];
@@ -31,16 +32,32 @@ function App() {
       });
       console.log(res)
       if (!res.ok) throw new Error(await res.text());
-        return await res.json(); // or res.blob() if returning an image
+         // or res.blob() if returning an image
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setResult(url);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
+  /*function download() { // auto-download
+    const a = document.createElement("a"); //makes invisible link
+    a.href = resultUrl; //assings it to the image
+    a.download = "minecraft.png"; //says that it'll be called this when downloaded
+    a.click(); //simulates a click so the file downloads itself
+  }*/
+  
+
   useEffect(() => {
     return () => preview && URL.revokeObjectURL(preview);
   }, [preview]);
-  
+  useEffect(() => {
+    return () => {
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+    };
+  }, [resultUrl]);
 
   return (
     <div className="App">
@@ -74,6 +91,17 @@ function App() {
             Convert
           </div>
         </form>
+        {resultUrl && 
+        (
+          <div>
+            <img src={resultUrl} alt="Processed" />
+            <a href={resultUrl} download="minecraft.png" className='dwn-link-btn'>
+              <div id="submitButton">
+                Download
+              </div>
+            </a>
+          </div>
+        )}
       </div>
       <div className="footer">
         <p><a>Github</a></p>
