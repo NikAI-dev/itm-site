@@ -94,7 +94,7 @@ function App() {
               )
               }
             </label>
-            <div className='submitButton' onClick={openFilePicker}>
+            <div className='submitButton' id='upload-btn' onClick={openFilePicker}>
               Upload Image
             </div>
           </div>  
@@ -108,12 +108,12 @@ function App() {
         </form>
         {resultUrl && 
         (
-          <div>
+          <div className='outputContainer'>
             <div className="imageBox">
               <img className="image" src={resultUrl} alt="Result" />
             </div>
             <a href={resultUrl} download="minecraft.png" className='dwn-link-btn'>
-              <div className="submitButton">
+              <div className="submitButton" id="download-btn">
                 Download
               </div>
             </a>

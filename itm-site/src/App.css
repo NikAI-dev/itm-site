@@ -3,7 +3,8 @@
 }
 .App {
   background-color: #2D2D2D;
-  height: 100vh;
+  height: fit-content;
+  min-height: 100vh;
   padding: 12px;
   position: relative;
 }
@@ -34,13 +35,23 @@
 
 
 .mainContent{
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   justify-items: center;
   align-items: center;
+
+  margin-top: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 200px;
 }
 .upload-container{
+  display: flex;
   width: fit-content;
   box-sizing: border-box;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .mainForm{
   display: flex;
@@ -78,6 +89,9 @@
 .upload-text {
   color: #555;
 }
+#upload-btn {
+  margin-top: 16px;
+}
 .block-number{
   display: flex;
   justify-content: space-between;
@@ -96,6 +110,18 @@
   cursor: pointer;
   border-radius: 8px;
   padding: 8px;
+  width: fit-content;
+}
+
+.outputContainer {
+  display: flex;
+  width: fit-content;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 40px;
 }
 
 .imageBox {
@@ -117,6 +143,7 @@
 
 .dwn-link-btn{
   text-decoration: none;
+  margin-top: 15px;
 }
 
 .footer{
