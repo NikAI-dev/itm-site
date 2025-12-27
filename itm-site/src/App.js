@@ -2,9 +2,9 @@ import './App.css';
 import { useState, useEffect, useRef } from "react"
 
 function App() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [width, setWidth] = useState(64)
+  const [width, setWidth] = useState(64);
   const [resultUrl, setResult] = useState(null);
 
   const fileInputRef = useRef(null);
@@ -87,7 +87,10 @@ function App() {
               {preview == null ? (
                 <span class="upload-text">Click to Upload Image</span>
               ) : (
-                <img src={preview} alt='Preview'/>
+                <div className='imageBox'>
+                  <img className='image' src={preview} alt='Preview'/>
+                </div>
+                
               )
               }
             </label>
@@ -106,7 +109,9 @@ function App() {
         {resultUrl && 
         (
           <div>
-            <img src={resultUrl} alt="Processed" />
+            <div className="imageBox">
+              <img className="image" src={resultUrl} alt="Result" />
+            </div>
             <a href={resultUrl} download="minecraft.png" className='dwn-link-btn'>
               <div className="submitButton">
                 Download

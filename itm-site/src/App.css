@@ -97,6 +97,24 @@
   border-radius: 8px;
   padding: 8px;
 }
+
+.imageBox {
+  width: 420px;          /* pick what you like */
+  height: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;      /* or transparent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* preserves aspect ratio + letterboxing */
+}
+
 .dwn-link-btn{
   text-decoration: none;
 }
