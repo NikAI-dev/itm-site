@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 function App() {
   const [file, setFile] = useState(null)
@@ -7,6 +7,11 @@ function App() {
   const [width, setWidth] = useState(64)
   const [resultUrl, setResult] = useState(null);
 
+  const fileInputRef = useRef(null);
+
+  function openFilePicker() {
+    fileInputRef.current.click();
+  }
   function handleFileChange(e) {
     const selected = e.target.files[0];
     setFile(selected);
@@ -75,19 +80,26 @@ function App() {
       <div className="mainContent">
         <form class="mainForm">
           <div class="upload-container">
-            <input type="file" id="image-upload" onChange={handleFileChange} name="profile_pic" accept="image/png, image/jpeg" class="fileInput" />
+            <input ref={fileInputRef} type="file" id="image-upload" onChange={handleFileChange} name="profile_pic" accept="image/png, image/jpeg" class="fileInput" />
             
           
             <label for="image-upload" class="file-label">
-              <span class="upload-icon">⬆️</span>
-              <span class="upload-text">Click to Upload Image</span>
+              {preview == null ? (
+                <span class="upload-text">Click to Upload Image</span>
+              ) : (
+                <img src={preview} alt='Preview'/>
+              )
+              }
             </label>
-          </div>
+            <div className='submitButton' onClick={openFilePicker}>
+              Upload Image
+            </div>
+          </div>  
           <div class="block-number">
             <label for="width-selection" class="block-label"><p>Number of horizontal blocks</p></label>
             <input id="width-selection" type="number" class="block-input" value={width} onChange={handleWidthChange}/>
           </div>
-          <div id="submitButton" onClick={handleSubmit}>
+          <div className="submitButton" onClick={handleSubmit}>
             Convert
           </div>
         </form>
@@ -96,7 +108,7 @@ function App() {
           <div>
             <img src={resultUrl} alt="Processed" />
             <a href={resultUrl} download="minecraft.png" className='dwn-link-btn'>
-              <div id="submitButton">
+              <div className="submitButton">
                 Download
               </div>
             </a>

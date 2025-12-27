@@ -91,7 +91,7 @@
   height: 50%;
   color: black;
 }
-#submitButton{
+.submitButton{
   background-color: rgb(33, 204, 33);
   cursor: pointer;
   border-radius: 8px;
