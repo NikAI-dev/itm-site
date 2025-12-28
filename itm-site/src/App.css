@@ -1,161 +1,330 @@
-*{
-  color:white;
+/* Base */
+* {
+  box-sizing: border-box;
+  color: white;
 }
+
+:root {
+  --bg: #2d2d2d;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-2: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.18);
+  --text-dim: rgba(255, 255, 255, 0.75);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --green: rgb(33, 204, 33);
+  --green-hover: rgb(26, 170, 26);
+}
+
 .App {
-  background-color: #2D2D2D;
-  height: fit-content;
+  background-color: var(--bg);
   min-height: 100vh;
-  padding: 12px;
+  padding: 16px;
   position: relative;
 }
 
-
-.navbar{
+/* Navbar */
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 12px;
 }
-.infobox{
+
+.brand {
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.infobox {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
-.help-text{
-  margin: 5px;
+
+/* Help dropdown */
+.helpDropdown {
+  position: relative;
 }
-.language-box{
-  margin: 5px;
-  border: 2px solid white;
-  border-radius: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
+
+.helpDropdown summary {
+  list-style: none; /* remove default triangle in some browsers */
 }
-.language-text{
-  margin: 5px;
+
+.helpDropdown summary::-webkit-details-marker {
+  display: none; /* remove default marker in Chrome/Safari */
+}
+
+.dropdownPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(360px, 80vw);
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.75);
+  box-shadow: var(--shadow);
+  z-index: 10;
+}
+
+.dropdownText {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+
+/* Language dropdown */
+.languageSelect {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.languageSelect option {
+  color: black; /* makes options readable in most browsers */
 }
 
 
-.mainContent{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
+.language-box {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--panel-2);
+}
 
-  margin-top: 20px;
-  margin-bottom: 24px;
-  padding-bottom: 200px;
+.language-text {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
 }
-.upload-container{
-  display: flex;
-  width: fit-content;
-  box-sizing: border-box;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.mainForm{
+
+/* Main */
+.mainContent {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 22px;
+  padding-bottom: 140px; /* keep footer spacing */
 }
+
+.mainForm {
+  width: min(720px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Upload */
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
 .fileInput {
-  /* Hide the default input completely */
-  visibility: hidden; 
+  position: absolute;
   width: 0;
   height: 0;
-  /* Use position: absolute or display: none if visibility: hidden causes layout issues in some browsers */
-  position: absolute;
+  visibility: hidden;
 }
+
 .file-label {
+  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 2em;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px dashed var(--border);
+  background: rgba(0, 0, 0, 0.22);
   text-align: center;
-  transition: background-color 0.3s;
+  transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
+
 .file-label:hover {
-  background-color: #e9ecef;
+  background: rgba(0, 0, 0, 0.28);
+  border-color: rgba(255, 255, 255, 0.30);
+  transform: translateY(-1px);
 }
+
 .upload-icon {
-  font-size: 2em;
-  color: #007bff;
-  margin-bottom: 0.5em;
+  font-size: 28px;
+  margin-bottom: 6px;
 }
+
 .upload-text {
-  color: #555;
+  font-weight: 700;
+  color: white;
 }
-#upload-btn {
-  margin-top: 16px;
+
+.upload-subtext {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-dim);
 }
-.block-number{
+
+/* Controls */
+.block-number {
+  width: min(520px, 92vw);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
 }
-.block-label{
-  padding: 5px;
+
+.block-label {
+  font-size: 14px;
+  color: var(--text-dim);
 }
-.block-input{
-  margin: 5px;
-  height: 50%;
+
+.block-input {
+  width: 120px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  outline: none;
+}
+
+.block-input:focus {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btnPrimary {
+  background: var(--green);
   color: black;
 }
-.submitButton{
-  background-color: rgb(33, 204, 33);
-  cursor: pointer;
-  border-radius: 8px;
-  padding: 8px;
-  width: fit-content;
+
+.btnPrimary:hover {
+  background: var(--green-hover);
 }
 
+.btnSecondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border: 1px solid var(--border);
+}
+
+.btnSecondary:hover {
+  filter: brightness(1.1);
+}
+
+/* Result */
 .outputContainer {
   display: flex;
-  width: fit-content;
-  box-sizing: border-box;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-
-  margin-top: 40px;
+  margin-top: 26px;
+  gap: 12px;
 }
 
 .imageBox {
-  width: 420px;          /* pick what you like */
-  height: 420px;
-  border-radius: 12px;
+  width: min(520px, 92vw);
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
   overflow: hidden;
-  background: #111;      /* or transparent */
+  background: #111;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--border);
 }
 
 .image {
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* preserves aspect ratio + letterboxing */
+  object-fit: contain;
 }
 
-.dwn-link-btn{
+.dwn-link-btn {
   text-decoration: none;
-  margin-top: 15px;
 }
 
-.footer{
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
+/* Footer */
+.footer {
   text-align: center;
-  background-color: black;
-  margin: -12px;
-  margin-top: 12px;
-  height: 10%;
+  background-color: rgba(0, 0, 0, 0.65);
+  border-top: 1px solid var(--border);
   width: 100%;
   position: absolute;
+  left: 0;
   bottom: 0;
+  padding: 10px 0;
+}
+
+.footerLink {
+  color: white;
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Small error message */
+.errorBox {
+  width: min(520px, 92vw);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 80, 80, 0.35);
+  background: rgba(255, 80, 80, 0.10);
+  color: rgba(255, 220, 220, 0.95);
+  font-size: 14px;
+}
+
+/* Small "Help" link-button */
+.linkButton {
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  opacity: 0.85;
+  font-weight: 700;
+}
+
+.linkButton:hover {
+  opacity: 1;
+  text-decoration: underline;
 }

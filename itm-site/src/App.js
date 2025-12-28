@@ -1,63 +1,118 @@
-import './App.css';
-import { useState, useEffect, useRef } from "react"
+import "./App.css";
+import { useState, useEffect, useRef } from "react";
 
 function App() {
   const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [width, setWidth] = useState(64);
-  const [resultUrl, setResult] = useState(null);
+  const [resultUrl, setResultUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [language, setLanguage] = useState("English");
+
 
   const fileInputRef = useRef(null);
 
+  const TEXT = {
+    English: {
+      title: "MinecraftIMG",
+      upload: "Upload Image",
+      chooseImage: "Choose an image",
+      convert: "Convert",
+      blocksLabel: "Number of horizontal blocks",
+      help: "Help",
+      helpText:
+        "Upload an image, choose the number of blocks, and download the Minecraft-style result.",
+      download: "Download"
+    },
+    French: {
+      title: "MinecraftIMG",
+      upload: "Téléverser une image",
+      chooseImage: "Choisir une image",
+      convert: "Convertir",
+      blocksLabel: "Nombre de blocs horizontaux",
+      help: "Aide",
+      helpText:
+        "Téléversez une image, choisissez le nombre de blocs, puis téléchargez le résultat.",
+      download: "Télécharger"
+    },
+    Russian: {
+      title: "MinecraftIMG",
+      upload: "Загрузить изображение",
+      chooseImage: "Выбрать картинку",
+      convert: "Преобразовать",
+      blocksLabel: "Количество блоков по горизонтали",
+      help: "Помощь",
+      helpText:
+        "Загрузите изображение, выберите количество блоков и скачайте результат.",
+      download: "Закачать"
+    },
+  };
+  const t = TEXT[language];
+
   function openFilePicker() {
-    fileInputRef.current.click();
-  }
-  function handleFileChange(e) {
-    const selected = e.target.files[0];
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
-  }
-  function handleWidthChange(e) {
-    setWidth(e.target.value);
-  }
-  function handleSubmit() {
-    upload(file, width);
+    fileInputRef.current?.click();
   }
 
-  async function upload(file, width) {
+  function handleFileChange(e) {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+
+    setErrorMsg("");
+    setFile(selected);
+    setPreviewUrl(URL.createObjectURL(selected));
+
+    // allow re-selecting the same file later
+    e.target.value = "";
+  }
+
+  function handleWidthChange(e) {
+    // keep it numeric
+    const next = Number(e.target.value);
+    setWidth(Number.isFinite(next) ? next : 64);
+  }
+
+  async function upload(selectedFile, blockWidth) {
+    if (!selectedFile) return;
+
     const form = new FormData();
-    form.append("image", file);
-    console.log(width)
-    form.append("width", width);
+    form.append("image", selectedFile);
+    form.append("width", String(blockWidth));
+
+    setIsLoading(true);
+    setErrorMsg("");
 
     try {
-      const res = await fetch('http://localhost:5000/minecraftify', {
-        method:"POST",
-        body:form
+      const res = await fetch("http://localhost:5000/minecraftify", {
+        method: "POST",
+        body: form,
       });
-      console.log(res)
+
       if (!res.ok) throw new Error(await res.text());
-         // or res.blob() if returning an image
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      setResult(url);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      setResultUrl(url);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setErrorMsg("Conversion failed. Is the Flask server running?");
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
 
-  /*function download() { // auto-download
-    const a = document.createElement("a"); //makes invisible link
-    a.href = resultUrl; //assings it to the image
-    a.download = "minecraft.png"; //says that it'll be called this when downloaded
-    a.click(); //simulates a click so the file downloads itself
-  }*/
-  
+  function handleSubmit(e) {
+    e.preventDefault(); // stop form reload
+    upload(file, width);
+  }
 
+  // cleanup blob urls
   useEffect(() => {
-    return () => preview && URL.revokeObjectURL(preview);
-  }, [preview]);
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   useEffect(() => {
     return () => {
       if (resultUrl) URL.revokeObjectURL(resultUrl);
@@ -66,63 +121,129 @@ function App() {
 
   return (
     <div className="App">
-      <div className="navbar">
+      <header className="navbar">
         <div className="titlebox">
-          <h3>MinecraftIMG</h3>
+          <h3 className="brand">{t.title}</h3>
         </div>
+
         <div className="infobox">
-          <h4 className="help-text">Help</h4>
+          <details className="helpDropdown">
+            <summary className="linkButton">{t.help}</summary>
+            <div className="dropdownPanel">
+              {/* TODO: replace this with your real help text later */}
+              <p className="dropdownText">
+                {t.helpText}
+                {/*Choose an image by either clicking on either the <strong>Choose an image</strong> box or the 
+                <strong> Upload Image</strong> button.<br/> Then choose the desired <strong>width in blocks </strong>
+                of the result image.<br/> Finally, click on <strong>Convert</strong> and wait for the result.<br/>
+                <span style={{weight:"bold", color:"red"}}> It is normal if the result isn't instant. We will tell you if an error happens.</span>
+                */}
+              </p>
+            </div>
+          </details>
+
           <div className="language-box">
-            <h3 className="language-text">English</h3>
+            <select
+              className="languageSelect"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              aria-label="Select language"
+            >
+              <option value="English">English</option>
+              <option value="French">Français</option>
+              <option value="Russian">Русский</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div className="mainContent">
-        <form class="mainForm">
-          <div class="upload-container">
-            <input ref={fileInputRef} type="file" id="image-upload" onChange={handleFileChange} name="profile_pic" accept="image/png, image/jpeg" class="fileInput" />
-            
-          
-            <label for="image-upload" class="file-label">
-              {preview == null ? (
-                <span class="upload-text">Click to Upload Image</span>
+
+      </header>
+
+      <main className="mainContent">
+        <form className="mainForm" onSubmit={handleSubmit}>
+          <section className="upload-container">
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="image-upload"
+              onChange={handleFileChange}
+              accept="image/png, image/jpeg"
+              className="fileInput"
+            />
+
+            <label htmlFor="image-upload" className="file-label">
+              {!previewUrl ? (
+                <>
+                  <span className="upload-icon">⬆️</span>
+                  <span className="upload-text">{t.chooseImage}</span>
+                  <span className="upload-subtext">PNG, JPG, JPEG</span>
+                </>
               ) : (
-                <div className='imageBox'>
-                  <img className='image' src={preview} alt='Preview'/>
+                <div className="imageBox">
+                  <img className="image" src={previewUrl} alt="Preview" />
                 </div>
-                
-              )
-              }
+              )}
             </label>
-            <div className='submitButton' id='upload-btn' onClick={openFilePicker}>
-              Upload Image
-            </div>
-          </div>  
-          <div class="block-number">
-            <label for="width-selection" class="block-label"><p>Number of horizontal blocks</p></label>
-            <input id="width-selection" type="number" class="block-input" value={width} onChange={handleWidthChange}/>
+
+            <button
+              type="button"
+              className="btn btnSecondary"
+              id="upload-btn"
+              onClick={openFilePicker}
+              disabled={isLoading}
+            >
+              {t.upload}
+            </button>
+          </section>
+
+          <div className="block-number">
+            <label htmlFor="width-selection" className="block-label">
+              {t.blocksLabel}
+            </label>
+            <input
+              id="width-selection"
+              type="number"
+              className="block-input"
+              value={width}
+              onChange={handleWidthChange}
+              min={1}
+              max={512}
+            />
           </div>
-          <div className="submitButton" onClick={handleSubmit}>
-            Convert
-          </div>
+
+          <button
+            type="submit"
+            className="btn btnPrimary"
+            disabled={!file || isLoading}
+            title={!file ? "Select an image first" : ""}
+          >
+            {isLoading ? "Converting..." : t.convert}
+          </button>
+
+          {errorMsg && <div className="errorBox">{errorMsg}</div>}
         </form>
-        {resultUrl && 
-        (
-          <div className='outputContainer'>
+
+        {resultUrl && (
+          <section className="outputContainer">
             <div className="imageBox">
               <img className="image" src={resultUrl} alt="Result" />
             </div>
-            <a href={resultUrl} download="minecraft.png" className='dwn-link-btn'>
-              <div className="submitButton" id="download-btn">
-                Download
-              </div>
+
+            <a href={resultUrl} download="minecraft.png" className="dwn-link-btn">
+              <button type="button" className="btn btnPrimary" id="download-btn">
+                {t.download}
+              </button>
             </a>
-          </div>
+          </section>
         )}
-      </div>
-      <div className="footer">
-        <p><a>Github</a></p>
-      </div>
+      </main>
+
+      <footer className="footer">
+        <p>
+          <a className="footerLink" href="#" onClick={(e) => e.preventDefault()}>
+            Github
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }
