@@ -21,7 +21,7 @@ def minecraftify_api():
     
     width = request.form.get("width", type=int, default=128)
     image_bytes = f.read()
-    result_img = converter_bytes(image_bytes= image_bytes, width= width,blocks_list= "/Users/Nikita/Desktop/Random programs/itm site/backend/blocks.json")
+    result_img = converter_bytes(image_bytes= image_bytes, width= width,blocks_dir= "/Users/Nikita/Desktop/Random programs/itm site/backend/", blocks_json="blocks.json")
 
     buf = BytesIO()
     result_img.save(buf, format="PNG")
