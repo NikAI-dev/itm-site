@@ -83,19 +83,23 @@ function App() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("http://localhost:5000/minecraftify", {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await fetch(`${apiUrl}/minecraftify`, {
         method: "POST",
         body: form,
       });
 
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: await res.text() }));
+        throw new Error(errorData.error || "Unknown error");
+      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setResultUrl(url);
     } catch (err) {
       console.error("Error fetching data:", err);
-      setErrorMsg("Conversion failed. Is the Flask server running?");
+      setErrorMsg(err.message || "Conversion failed. Is the Flask server running?");
     } finally {
       setIsLoading(false);
     }
