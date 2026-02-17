@@ -90,7 +90,7 @@ function App() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: await res.text() }));
+        const errorData = await res.json().catch(() => ({ error: res.text() }));
         throw new Error(errorData.error || "Unknown error");
       }
 
