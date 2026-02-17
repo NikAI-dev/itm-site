@@ -17,7 +17,6 @@ import os
 import logging
 from io import BytesIO
 from pathlib import Path
-import signal
 
 from image_to_minecraft.minecraftifier import converter_bytes
 from config import config
@@ -112,10 +111,6 @@ def minecraftify_api():
         # Log conversion attempt
         logger.info(f"Converting image: {secure_filename(file.filename)} with width={width}")
         
-        # Set timeout for conversion
-        signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(config.CONVERSION_TIMEOUT_SECONDS)
-        
         try:
             # Perform conversion
             result_img = converter_bytes(
@@ -125,11 +120,8 @@ def minecraftify_api():
                 blocks_json=config.BLOCKS_JSON
             )
             
-            # Cancel timeout
-            signal.alarm(0)
             
         except TimeoutError:
-            signal.alarm(0)
             logger.error("Image conversion timed out")
             return jsonify({"error": "Conversion took too long. Try a smaller image or fewer blocks."}), 504
         
